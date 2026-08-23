@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>VolgaCTF 2026 Final &ndash; Technical information</title>
+
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/sticky-footer.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <nav class="navbar navbar-dark bg-dark">
+      <a class="navbar-brand" href="./">
+        <img src="./img/volgactf-logo.svg" height="30" class="d-inline-block align-top" alt="VolgaCTF logo">
+        &nbsp;
+        VolgaCTF 2026 Final
+      </a>
+    </nav>
+    <main role="main" class="container mb-5">
+      <h1 class="mt-5">VolgaCTF 2026 Final &ndash; Technical information</h1>
+
+      <ul class="lead">
+        <li><a href="#equipment">Equipment</a></li>
+        <li><a href="#network">Network</a></li>
+        <li><a href="#vulnbox">Vulnbox</a></li>
+        <li><a href="#extra-instance">Extra instance (remote teams)</a></li>
+        <li><a href="#flag-signatures">Flag signatures</a></li>
+        <li><a href="#submitting-flags">Submitting flags</a></li>
+        <li><a href="#an-insight-into-acs">An insight into ACS</a></li>
+      </ul>
+
+      <h2 id="equipment" class="mt-4">Equipment</h2>
+      <p>Each team will be provided with the following equipment:</p>
+      <ul>
+        <li>a network switch with 7 free Ethernet (RJ-45) ports;</li>
+        <li>6 UTP CAT5 cables;</li>
+        <li>a power strip (surge protector) with 7 free outlets.</li>
+      </ul>
+      <p style="font-variant: small-caps;">please note: no usb type-c to ethernet adapters will be provided!</p>
+
+      <h2 id="network" class="mt-4">Network</h2>
+      <p>Each team's network segment has the following address: <code>10.5.1XY.0/24</code>, where <strong>XY</strong> stands for a team's number (zero-based).</p>
+      <p>Scoreboard URL (intranet): <a href="https://final.volgactf.ru/scoreboard" target="_blank" rel="noopener">https://final.volgactf.ru/scoreboard</a></p>
+      <p>Scoreboard URL (public): <a href="https://live.volgactf.ru/scoreboard" target="_blank" rel="noopener">https://live.volgactf.ru/scoreboard</a></p>
+
+      <h2 id="vulnbox" class="mt-4">Vulnbox</h2>
+      <p><a href="https://www.virtualbox.org/wiki/Downloads" target="_blank" rel="noopener">Virtualbox 7.1.0</a> or later is needed to launch <a href="https://final.volgactf.ru/media/volgactf-2026-final-image.zip" target="_blank" rel="noopener">the vulnbox</a>. The vulnbox is based on Debian 11, all services are isolated from each other by the means of Docker. Containers start at boot.</p>
+      <p style="font-variant: small-caps;">please note: the vulnbox won't run on apple silicon!</p>
+      <p>A vulnbox instance <strong>MUST</strong> have the following address: <code>10.5.1XY.3</code>.</p>
+      <p style="font-variant: small-caps;">before launching the vulnbox instance, do not forget to regenerate your virtual machine instance mac address!</p>
+
+      <h2 id="flag-signatures" class="mt-4">Flag signatures</h3>
+      <p>
+        Flags are stored and transported into so-called capsules. A capsule looks like this:
+        <code>
+          VolgaCTF{eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJmbGFnIjoiYTRhYmIzZTU0ODM2MTNkNWMzMmY0NjIyYjkzMDE0ZDU9In0.8Dg2FOnWz_dAbT4m2nKCvTb_tjPO1gsZR63NA2md7zclb2DMUb_GND7Lg2YsrunS5uFiTkqAyrqGlMMDeB5qDQ}
+        </code>
+      </p>
+
+      <p>
+        Data between <code>VolgaCTF{</code> and <code>}</code> is a <a href="https://jwt.io" target="_blank" rel="noopener">JSON Web Token</a> signed using ES256 algorithm. You will need an ACS <a href="https://final.volgactf.ru/api/capsule/v1/public_key" target="_blank" rel="noopener">public key</a> to decode a capsule and obtain a flag from it. Flag format is <code>^[\da-f]{32}=$</code>.
+      </p>
+
+      <p>
+        <details>
+          <summary>Public key (for the sample capsule)</summary>
+          <code>
+            -----BEGIN PUBLIC KEY-----<br>
+            MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEeiZb279aIyoK2tSQrwv6y604xcxszChanXuH/Kjr<br>
+            jUxmeXFh5amKIh3SOatcfebOoa/zlrthu3P09jQbRtm9mg==<br>
+            -----END PUBLIC KEY-----
+          </code>
+        </details>
+      </p>
+
+      <h2 id="submitting-flags" class="mt-4">Submitting flags</h3>
+      <p>
+        You should submit <strong>flags</strong> to the REST API server: <code>https://final.volgactf.ru</code> (base URL).
+      </p>
+<!--       <p><strong>ATTENTION! Flags submission attempts originating from vulnboxes won't be accepted by the system.</strong></p> -->
+      <p>Each flag's lifetime is 6 minutes.</p>
+
+      <h3 class="mt-3">API</h3>
+      <ul>
+        <li><a href="https://github.com/VolgaCTF/volgactf-final-api" target="_blank" rel="noopener">VolgaCTF Final API</a>&nbsp;public APIs description</li>
+        <li><a href="https://github.com/VolgaCTF/volgactf-final-py" target="_blank" rel="noopener">volgactf.final</a>&nbsp;CLI & public API library for Python 3</li>
+      </ul>
+
+      <h3 class="mt-3">Rate limits</h3>
+      <ul>
+        <li>Flag info <code>10r/s</code></li>
+        <li>Flag submit <code>10r/s</code></li>
+        <li>Service status <code>10r/s</code></li>
+      </ul>
+
+      <h2 id="an-insight-into-acs" class="mt-4">An insight into ACS</h2>
+      <p>
+        A game is divided into 2-minute rounds.
+      </p>
+      <p>
+        When a new round is triggered, ACS tries to push flags (transported in capsules) to every service of every team. If a push attempt of a flag is successful, this particular flag is marked as <strong>active</strong>. ACS immediately tries to pull <strong>active</strong> flags.
+      </p>
+      <p>
+        Every flag expires 6 minutes after it has been marked as <strong>active</strong>.
+      </p>
+      <p>
+        Additionally, in each round ACS launches 3 <strong>polls</strong>: it pulls one randomly chosen <strong>active</strong> flag from each service from each team.
+      </p>
+      <p>
+        Scores are updated when all <strong>active</strong> flags issued in a particular round become <strong>expired</strong>.
+      </p>
+
+      <h3 class="mt-3">Availability</h3>
+      <p>
+        1 availability point for a flag (AvP<sub>flag</sub>) is given if all attempts to pull this flag were successful (<strong>UP</strong> state). Otherwise, a fraction of a point is given according to the equation:
+      </p>
+      <p>
+        AvP<sub>flag</sub> = SPA<sub>flag</sub> / TPA<sub>flag</sub>,
+      </p>
+      <p>
+        where SPA stands for the number of successful pull attempts and TPA stands for the total number of pull attempts.
+      </p>
+
+      <h3 class="mt-3">Defence</h3>
+      <p>
+        By default, <strong>no</strong> defence points for any flag from any service are given.
+      </p>
+      <p>
+        Defence points for flags from a service are to be awarded starting from the <strong>next</strong> round a flag from this very service is successfully submitted into ACS by any team (<i>first blood</i>). 1 defence point (DP<sub>flag</sub>) is given if <strong>all</strong> attempts to pull a flag were successful and no-one has stolen and submitted this particular flag into ACS.
+      </p>
+
+      <h3 class="mt-3">Attack</h3>
+      <p>
+        1 attack point (AtP<sub>flag</sub>) is given for each stolen flag.
+      </p>
+      <p>
+        A team <strong>cannot</strong> submit a flag stolen from a service <strong>X</strong> if a state of a service <strong>X</strong> in their vulnbox is not <strong>UP</strong>.
+      </p>
+
+      <h3 class="mt-3">Total</h3>
+      <p>
+        Total team score (TtS) is calculated as a sum of total scores (tS) in each category:
+      </p>
+      <p>
+        TtS = tS<sub>attack</sub> + tS<sub>defence</sub> + tS<sub>availability</sub>
+      </p>
+      <p>
+        In case of equal TtS a team who performed the last attack before the other team is placed higher in the scoreboard.
+      </p>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <span class="text-muted">© 2011 &ndash; 2026 <a href="https://volgactf.ru/en/" target="_blank" rel="noopener">VolgaCTF</a></span>
+      </div>
+    </footer>
+</body></html>
